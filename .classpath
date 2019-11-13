@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/CopyLibs/org-netbeans-modules-java-j2seproject-copylibstask.jar"/>
+	<classpathentry kind="lib" path="C:/Users/David/Documents/M2/SMA/workspace projet/Exploration/lib/CopyLibs/jade.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/H:/Documents/systemeMultiAgents/JADE-doc-4.3.3.zip!/jade/doc/api"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
