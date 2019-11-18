@@ -20,9 +20,9 @@ import java.util.HashMap;
 public class Exploration {
 
     private final Carte carte;
-    private static boolean RANDOM_SIZE = false;
+    private static boolean RANDOM_SIZE = true;
     private final int VEHICULE_NBR = 4;
-    private final int OBSTACLES_NBR = 0;
+    private final int OBSTACLES_NBR = 500;
 
     /**
      *

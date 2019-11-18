@@ -40,15 +40,14 @@ public class InitialisationBossBehaviour extends Behaviour {
 		//Initialisation avec l'environnement du boss
 		if (agentsTraites.size() == 0) {
 			this.agent.carte = new CarteDynamique(this.agent.getVehicule().getID());
-			this.agent.setPlaceAbsolue(new Coordonnees(0, 0));
 			List<Case> casesEnviron = this.agent.getVehicule().getVoisinage();
-			Coordonnees maPlace = this.agent.carte.miseAJourCarte(new Coordonnees(0, 0), casesEnviron);
+			Coordonnees maPlace = this.agent.carte.miseAJourCarte(agent.getIdDuBigBoss(), casesEnviron);
 			this.agent.setPlaceAbsolue(maPlace);
 			
 			List<Case> voisins = this.agent.getVehicule().getVoisins();
 			for(Case caseAvecVoisin : voisins) {
 				agentsPretsATraiter.add(caseAvecVoisin.getVehicule());
-				this.agent.carte.declarePosition(caseAvecVoisin.getVehicule(), new Coordonnees(caseAvecVoisin.getX_relative(), caseAvecVoisin.getY_relative()).translation(maPlace));
+				//this.agent.carte.declarePosition(caseAvecVoisin.getVehicule(), new Coordonnees(caseAvecVoisin.getX_relative(), caseAvecVoisin.getY_relative()).translation(maPlace));
 			}
 			
 			agentsTraites.add(this.agent.getVehicule().getID());
@@ -93,15 +92,12 @@ public class InitialisationBossBehaviour extends Behaviour {
 			it.remove();
 			
 			EnvironmentInformation cases = infosRecues.get(idAgentATraiter);
-			Coordonnees placeActuelle = this.agent.carte.getPlacementAgents().get(idAgentATraiter);
-			Coordonnees nvellePlace = this.agent.carte.miseAJourCarte2(placeActuelle, cases.casesAlentour);
-			//Coordonnees vecteurDecalage = Coordonnees.getVecteur(placeActuelle, nvellePlace);
+			this.agent.carte.miseAJourCarte2(idAgentATraiter, cases.casesAlentour);
 			for (CaseLightModel c : cases.casesAlentour) {
 				if (!c.occupee)
 					continue;
 				int idVehicule = c.vehicule;
 				if (!agentsTraites.contains(idVehicule)) {
-					this.agent.carte.declarePosition(idVehicule, nvellePlace);
 					agentsPretsATraiter.add(idVehicule);
 				}
 			}

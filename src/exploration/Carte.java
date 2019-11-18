@@ -325,6 +325,7 @@ public class Carte extends Thread {
                 }
             }
         }
+//        System.out.println(toString());
     }
 
     public void avancerIHM(int vehiculeControlledByUser, int xDirection, int yDirection, boolean pheromone) {
@@ -418,5 +419,18 @@ public class Carte extends Thread {
     public void dropPheromone(Pheromone p, int idV) {
         Case c = cases[Double.valueOf(positions.get(idV).getX()).intValue()][Double.valueOf(positions.get(idV).getY()).intValue()];
         c.addPheromone(p);
+    }
+    
+    @Override
+    public String toString() {
+    	StringBuffer buffer = new StringBuffer();
+    	for (int i = 0; i < cases[0].length; i++) {
+    		for (int j = 0; j < cases.length; j++) {
+    			Case c = cases[j][i];
+    			buffer.append(c.estObstacle() ? "X" : c.getVehicule() != -1 ? c.getVehicule() : c.isDecouverte() ? " " : "-");
+			}
+			buffer.append('\n');
+    	}
+    	return buffer.toString();
     }
 }

@@ -40,6 +40,7 @@ public class InitialisationBehaviour extends Behaviour {
 			if(msg != null) {
 				String[] coordsString = msg.getContent().split(",");
 				this.agent.setPlaceAbsolue(new Coordonnees(Integer.parseInt(coordsString[0]), Integer.parseInt(coordsString[1])));
+				messageRecuEtTraite = true;
 				this.agent.addBehaviour(new ExplorationBehaviour(agent));
 			}				
 			else

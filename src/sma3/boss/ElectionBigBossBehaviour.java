@@ -18,6 +18,8 @@ public class ElectionBigBossBehaviour extends OneShotBehaviour {
 	public void action() {
 		
 		int nbAutresAgents = this.agent.getListeAgents().size() - 1;
+		if (nbAutresAgents == 0)
+			this.agent.addBehaviour(new InitialisationBossBehaviour(agent));
 		Integer monLancerDe = this.agent.getVehicule().getID();
 		
 		this.agent.setIdDuBigBoss(monLancerDe);

@@ -8,6 +8,7 @@ import exploration.Direction;
 import exploration.Vehicule;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import sma.common.Coordonnees;
 import sma.common.DirectionUtil;
 
@@ -34,7 +35,7 @@ public class ExplorationBehaviour extends Behaviour {
 		//Analyse de l'environnement
 		if (stade == ETAPE_EXPLORATION.RECHERCHE) {
 			System.out.println("Je suis agent " + vehiculeAgent.getID() + " en " + agent.getPlaceAbsolue().toString());
-			try { Thread.sleep(500); } catch (InterruptedException e) { }
+			try { Thread.sleep(ExplorationAgent.TEMPS_PAUSE); } catch (InterruptedException e) { }
 			
 			casesVues = vehiculeAgent.getVoisinage();
 			boolean decision = false;
@@ -113,7 +114,8 @@ public class ExplorationBehaviour extends Behaviour {
 		}
 		//Réception de la nouvelle localisation
 		else if (stade == ETAPE_EXPLORATION.RECEP_NVELLE_PLACE) {
-			ACLMessage msg = agent.receive();
+			MessageTemplate mt = MessageTemplate.MatchOntology("Info place");
+			ACLMessage msg = agent.receive(mt);
 			if(msg != null) {
 				String[] coordsString = msg.getContent().split(",");
 				this.agent.setPlaceAbsolue(new Coordonnees(Integer.parseInt(coordsString[0]), Integer.parseInt(coordsString[1])));
@@ -125,10 +127,15 @@ public class ExplorationBehaviour extends Behaviour {
 		//Réception de mon nouvel objectif
 		else if (stade == ETAPE_EXPLORATION.RECEP_OBJECTIF) {
 			//Je sais où je suis et où je vais : j'y vais
-			ACLMessage msg = agent.receive();
+			MessageTemplate mt = MessageTemplate.MatchOntology("Info objectif");
+			ACLMessage msg = agent.receive(mt);
 			if(msg != null) {
-				String[] coordsString = msg.getContent().split(",");
-				monObjectif = new Coordonnees(Integer.parseInt(coordsString[0]), Integer.parseInt(coordsString[1])); 
+				System.out.println(msg.getContent());
+				String[] coordsString = msg.getContent().split(";");
+				String[] maPlaceS = coordsString[0].split(",");
+				agent.setPlaceAbsolue(new Coordonnees(Integer.parseInt(maPlaceS[0]), Integer.parseInt(maPlaceS[1])));
+				String[] objectifS = coordsString[1].split(",");
+				monObjectif = new Coordonnees(Integer.parseInt(objectifS[0]), Integer.parseInt(objectifS[1]));
 				allerVersObjectif(ETAPE_EXPLORATION.ENVOI_DIRECTION);
 				monObjectif = null; //Pour qu'à l'itération suivante, je demande un nouvel objectif
 									//au cas où l'endroit où j'allais a été découvert entretemps
@@ -145,6 +152,7 @@ public class ExplorationBehaviour extends Behaviour {
 			message.setSender(this.agent.getAID());
 			this.agent.send(message);
 			stade = ETAPE_EXPLORATION.RECEP_NVELLE_PLACE;
+			System.out.println("agent " + agent.getVehicule().getID() + " dir envoyée");
 		}
 	}
 
@@ -158,6 +166,7 @@ public class ExplorationBehaviour extends Behaviour {
 		agent.setDirectionRegardee(d);
 		vehiculeAgent.avancer(d);
 		stade = stadeSuivant;
+		System.out.println("agent " + agent.getVehicule().getID()+ " vers " + d.toString());
 	}
 	
 	private void allerVersObjectif(ETAPE_EXPLORATION stadeSuivant) {

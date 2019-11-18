@@ -24,7 +24,7 @@ public class ReceptionValeurElectionBehaviour extends Behaviour {
 	public void action() {
 		
 		int idMaxActuel = this.agent.getIdDuBigBoss();
-		
+			
 		MessageTemplate mt = MessageTemplate.MatchOntology("Élection");
 		ACLMessage msg = this.agent.receive(mt);
 		if (msg != null) {
@@ -48,7 +48,6 @@ public class ReceptionValeurElectionBehaviour extends Behaviour {
 		else {
 			block();
 		}
-
 	}
 
 	@Override

@@ -10,14 +10,19 @@ public class CaseLightModel {
 	
 	public CaseLightModel(String serializedInfo) {
 		String[] items = serializedInfo.split("(\\(|,|\\)| |:)+");
-		int indiceDepart = 1;
-		
+
 		obstacle = items[0].equals("Obstacle");		
-		x = Integer.parseInt(items[indiceDepart + 0]);
-		y = Integer.parseInt(items[indiceDepart + 1]);
-		String[] booleens = items[indiceDepart + 2].split("-");
+		x = Integer.parseInt(items[1]);
+		y = Integer.parseInt(items[2]);
+		String[] booleens = items[3].split("-");
 		decouverte = Boolean.parseBoolean(booleens[0]);
 		occupee = Boolean.parseBoolean(booleens[1]);
-		vehicule = Integer.parseInt(items[indiceDepart + 3]);
+		vehicule = Integer.parseInt(items[4]);
+	}
+
+	@Override
+	public String toString() {
+		return "CaseLightModel [x=" + x + ", y=" + y + ", decouverte=" + decouverte + ", occupee=" + occupee
+				+ ", vehicule=" + vehicule + ", obstacle=" + obstacle + "]";
 	}
 }
