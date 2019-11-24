@@ -1,7 +1,9 @@
 package sma1;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import exploration.Case;
@@ -17,7 +19,7 @@ public class ExplorationBehaviour extends TickerBehaviour {
 	private Vehicule vehiculeAgent;
 	
 	public ExplorationBehaviour(ExplorationAgent agent) {
-		super(agent, 10);
+		super(agent, 1);
 		this.agent = agent;
 		this.vehiculeAgent = this.agent.getVehicule();
 	}
@@ -29,6 +31,8 @@ public class ExplorationBehaviour extends TickerBehaviour {
 			
 			List<Case> casesInconnues = casesEnvironnantes.stream().filter(x -> !x.isDecouverte()).collect(Collectors.toList());
 			
+			Set<Direction> directionsTestees = new HashSet<>();
+			
 			if (!casesInconnues.isEmpty()) {
 				Case uneCaseInconnue = casesInconnues.get(new Random().nextInt(casesInconnues.size()));
 				Direction versCase = Direction.getDirection(uneCaseInconnue.getX_relative(), uneCaseInconnue.getY_relative());
@@ -39,7 +43,10 @@ public class ExplorationBehaviour extends TickerBehaviour {
 					Case cheminInteressant = casesEnvironnantes.stream().filter(x -> x.getX_relative() == coord.X && x.getY_relative() == coord.Y).findFirst().get();
 					
 					if (cheminInteressant.estObstacle() || cheminInteressant.isOccupee()) {
-						versCase = versCase.next();
+						directionsTestees.add(versCase);
+						do {
+							versCase = Direction.getRandom();
+						} while (directionsTestees.contains(versCase));
 						tests++;
 					}
 					else {

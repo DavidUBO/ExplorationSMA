@@ -25,4 +25,13 @@ public class Coordonnees {
 	public String toString() {
 		return "Coordonnees [X=" + X + ", Y=" + Y + "]";
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) return true;
+		if (o == null) return false;
+		if (!(o instanceof Coordonnees)) return false;
+		Coordonnees c = (Coordonnees) o;
+		return c.X == X && c.Y == Y;
+	}
 }

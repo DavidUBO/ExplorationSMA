@@ -1,6 +1,8 @@
 package sma3.carte;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import exploration.Direction;
+import javafx.util.Pair;
 import sma.common.Coordonnees;
 import sma.common.DirectionUtil;
 import sma3.serialisation.CaseLightModel;
@@ -234,6 +237,7 @@ public class CarteDynamique {
 	public Coordonnees getClosestUndiscoveredCase(Coordonnees depart) {
 		int distance = 1;
 		while (true) {
+			System.out.println("recherche distance " + distance);
 			int borneMinX = depart.X - distance;
 			int borneMaxX = depart.X + distance;
 			int borneMinY = depart.Y - distance;
@@ -257,14 +261,14 @@ public class CarteDynamique {
 			//On cherche s'il y a une case non découverte (la première, afin de sortir toujours la même et ne pas balader l'agent)
 			Optional<Entry<Coordonnees,Case>> caseNonDecouverte = casesPotentielles.entrySet().stream().filter(x -> !x.getValue().isDecouverte).findFirst();
 			if (caseNonDecouverte.isPresent())
-				return caseNonDecouverte.get().getKey();
+				return getClosestCaseFromShortestPath(depart, caseNonDecouverte.get().getKey());
 			
 			distance++;
 		}
 		//On a exploré toute la carte, il n'y a que des cases découvertes
 		//pour ne pas rien renvoyer, on propose la limite externe la plus proche
 		//sauf si l'on est déjà sur le bord, auquel cas on propose une bordure différente de la case occupée
-		return getClosestLimite(depart);
+		return getClosestCaseFromShortestPath(depart, getClosestLimite(depart));
 	}
 	
 	private Coordonnees getClosestLimite(Coordonnees depart) {
@@ -319,6 +323,62 @@ public class CarteDynamique {
 			coordProche = new Coordonnees(largeur - 1, y);
 		}
 		return coordProche;
+	}
+	
+	//Adapted from https://en.wikipedia.org/wiki/Pathfinding
+	private Coordonnees getClosestCaseFromShortestPath(Coordonnees depart, Coordonnees arrivee) {
+		if (getCoordonneesAdjacentes(depart).stream().anyMatch(x -> x.equals(arrivee)))
+			return arrivee;
+		
+		List<Pair<Coordonnees, Integer>> file = new LinkedList<>();
+		int compteur = 0;
+		file.add(new Pair<>(arrivee, compteur++));
+		
+		while (true) {
+			final Integer compteurInteger = new Integer(compteur); // thanks : https://stackoverflow.com/a/33799995
+			for (int i = 0; i < file.size(); i++) {
+				Pair<Coordonnees, Integer> paire = file.get(i);
+				List<Coordonnees> casesAdjacentes = getCoordonneesAdjacentes(paire.getKey());
+				for (Iterator<Coordonnees> it = casesAdjacentes.iterator(); it.hasNext(); ) {
+					Coordonnees c = it.next();
+					Case maCase = getCase(c.X, c.Y);
+					if (maCase.isObstacle()) //On ne considère pas les places occupées
+						it.remove();
+					else if (file.parallelStream().anyMatch(x -> x.getKey().equals(c) && x.getValue() <= compteurInteger))
+						it.remove();
+					else {
+						if (c.equals(depart)) {
+							System.out.println("on renvoie " + paire.getKey().toString());
+							return paire.getKey();
+						}
+						file.add(new Pair<>(c, compteur));
+					}
+				}
+			}
+			compteur++;
+		}
+	}
+	
+	private List<Coordonnees> getCoordonneesAdjacentes(Coordonnees point) {
+		int borneMinX = point.X - 1;
+		int borneMaxX = point.X + 1;
+		int borneMinY = point.Y - 1;
+		int borneMaxY = point.Y + 1;
+		
+		List<Coordonnees> res = new ArrayList<>();
+		for (int i = borneMinX < 0 ? 0 : borneMinX; i <= (borneMaxX > largeur - 1 ? largeur - 1 : borneMaxX) ; i++) {
+			if (i != borneMinX && i != borneMaxX) {
+				if (borneMinY >= 0)
+					res.add(new Coordonnees(i, borneMinY));
+				if (borneMaxY < hauteur)
+					res.add(new Coordonnees(i, borneMaxY));
+			}
+			else {
+				for (int j = borneMinY < 0 ? 0 : borneMinY; j <= (borneMaxY > hauteur - 1 ? hauteur - 1 : borneMaxY); j++)
+					res.add(new Coordonnees(i, j));
+			}
+		}
+		return res;
 	}
 		
 }

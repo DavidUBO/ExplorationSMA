@@ -18,7 +18,7 @@ public class Case {
 
 	public void declareAsObstacle() {
 		this.isObstacle = true;
-		this.isDecouverte = true;
+		//this.isDecouverte = true;
 	}
 
 	public int getIdOccupee() {
