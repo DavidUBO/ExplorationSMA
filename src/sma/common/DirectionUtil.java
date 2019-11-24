@@ -102,6 +102,8 @@ public final class DirectionUtil {
 	}
 	
 	public static String directionToString(Direction dir) {
+		if (dir == null)
+			return "null";
 		switch (dir) {
 	        case Nord:
 	            return "N";

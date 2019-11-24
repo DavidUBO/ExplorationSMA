@@ -161,12 +161,23 @@ public class ExplorationBehaviour extends Behaviour {
 		return false;
 	}
 	
-	private void setDirection(Direction d, ETAPE_EXPLORATION stadeSuivant) {
-		directionChoisie = d;
-		agent.setDirectionRegardee(d);
-		vehiculeAgent.avancer(d);
+	private synchronized void setDirection(Direction d, ETAPE_EXPLORATION stadeSuivant) {
+		List<Case> voisinage = vehiculeAgent.getVoisinage();
+		Coordonnees coordonneesAssocieesDirection = DirectionUtil.getXYfromDirection(d);
+		Case caseVisee = voisinage
+				.stream()
+				.filter(x -> x.getX_relative() == coordonneesAssocieesDirection.X && x.getY_relative() == coordonneesAssocieesDirection.Y)
+				.findAny().get();
+		if (caseVisee.estObstacle() || caseVisee.isOccupee()) {
+			directionChoisie = null;
+		}
+		else {			
+			directionChoisie = d;
+			agent.setDirectionRegardee(d);
+			vehiculeAgent.avancer(d);
+		}
 		stade = stadeSuivant;
-		System.out.println("agent " + agent.getVehicule().getID()+ " vers " + d.toString());
+		//System.out.println("agent " + agent.getVehicule().getID()+ " vers " + d.toString());
 	}
 	
 	private void allerVersObjectif(ETAPE_EXPLORATION stadeSuivant) {

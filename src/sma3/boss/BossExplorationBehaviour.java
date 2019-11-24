@@ -43,6 +43,7 @@ public class BossExplorationBehaviour extends Behaviour {
 		//Traitement de ce que voit le boss
 		if (stade == ETAPE_EXPLORATION.MON_EXPLORATION) {
 			System.out.println("Je suis le boss en " + agent.getPlaceAbsolue().toString());
+			System.out.println(agent.carte.toString());
 			try { Thread.sleep(ExplorationAgent.TEMPS_PAUSE); } catch (InterruptedException e) { }
 			
 			//Initialisaton de ce tour d'itération
@@ -74,7 +75,7 @@ public class BossExplorationBehaviour extends Behaviour {
 					this.agent.carte.miseAJourCarte2(idAgent, cases.casesAlentour);
 					
 					//Si l'agent a besoin d'un objectif
-					if (cases.direction == null) {
+					if (msg.getOntology().equals("Demande aide")) {
 						nbMessagesDirectionAttendus++;
 						demandeursObjectif.add(idAgent);
 					}
@@ -87,7 +88,6 @@ public class BossExplorationBehaviour extends Behaviour {
 					block();
 			}
 			else {
-				System.out.println(agent.carte.toString());
 				stade = ETAPE_EXPLORATION.AIDE_AUTRES_AGENTS;
 			}
 		}
@@ -191,10 +191,21 @@ public class BossExplorationBehaviour extends Behaviour {
 		return false;
 	}
 	
-	private void setDirection(Direction dir) {
-		agent.setDirectionRegardee(dir);
-		agent.getVehicule().avancer(dir);
-		directionPrise = dir;
+	private synchronized void setDirection(Direction dir) {
+		List<Case> voisinage = agent.getVehicule().getVoisinage();
+		Coordonnees coordonneesAssocieesDirection = DirectionUtil.getXYfromDirection(dir);
+		Case caseVisee = voisinage
+				.stream()
+				.filter(x -> x.getX_relative() == coordonneesAssocieesDirection.X && x.getY_relative() == coordonneesAssocieesDirection.Y)
+				.findAny().get();
+		if (caseVisee.estObstacle() || caseVisee.isOccupee()) {
+			directionPrise = null;
+		}
+		else {
+			agent.setDirectionRegardee(dir);
+			agent.getVehicule().avancer(dir);
+			directionPrise = dir;
+		}
 	}
 	
 	private void findAndGoObjectif() {
