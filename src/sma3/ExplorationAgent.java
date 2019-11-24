@@ -15,7 +15,7 @@ import sma3.carte.CarteDynamique;
 
 public class ExplorationAgent extends Agent {
 	
-	public static final int TEMPS_PAUSE = 5000;
+	public static final int TEMPS_PAUSE = 10;
 	
 	private Vehicule vehicule;
 	private Direction directionRegardee;

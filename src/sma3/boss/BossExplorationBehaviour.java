@@ -42,6 +42,7 @@ public class BossExplorationBehaviour extends Behaviour {
 	public void action() {
 		//Traitement de ce que voit le boss
 		if (stade == ETAPE_EXPLORATION.MON_EXPLORATION) {
+			System.out.println(agent.carte.toString());
 			System.out.println("Je suis le boss en " + agent.getPlaceAbsolue().toString());
 			try { Thread.sleep(ExplorationAgent.TEMPS_PAUSE); } catch (InterruptedException e) { }
 			
@@ -87,7 +88,6 @@ public class BossExplorationBehaviour extends Behaviour {
 					block();
 			}
 			else {
-				System.out.println(agent.carte.toString());
 				stade = ETAPE_EXPLORATION.AIDE_AUTRES_AGENTS;
 			}
 		}

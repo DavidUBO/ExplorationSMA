@@ -21,7 +21,7 @@ public class Exploration {
 
     private final Carte carte;
     private static boolean RANDOM_SIZE = true;
-    private final int VEHICULE_NBR = 4;
+    private final int VEHICULE_NBR = 1;
     private final int OBSTACLES_NBR = 500;
 
     /**

@@ -221,14 +221,14 @@ public class CarteDynamique {
 		Case ancienneCase = getCase(placeActuelle.X, placeActuelle.Y);
 		Coordonnees nouvellePlace = placeActuelle.translation(DirectionUtil.getXYfromDirection(directionPrise));
 		Case nouvelleCase = getCase(nouvellePlace.X, nouvellePlace.Y);
-//		if (!nouvelleCase.isObstacle() && nouvelleCase.getIdOccupee() == -1) {
+		if (!nouvelleCase.isObstacle() && nouvelleCase.getIdOccupee() == -1) {
 			ancienneCase.setInoccupee();
 			nouvelleCase.setIdOccupee(id);
 			placementAgents.put(id, nouvellePlace);
 			return nouvellePlace;
-//		}
-//		else
-//			return placeActuelle;
+		}
+		else
+			return placeActuelle;
 	}
 	
 	public Coordonnees getClosestUndiscoveredCase(Coordonnees depart) {
