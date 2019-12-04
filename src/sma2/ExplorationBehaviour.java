@@ -15,7 +15,7 @@ public class ExplorationBehaviour extends TickerBehaviour {
 	private Vehicule vehiculeAgent;
 	
 	public ExplorationBehaviour(ExplorationAgent agent) {
-		super(agent, 10);
+		super(agent, 1);
 		this.agent = agent;
 		this.vehiculeAgent = this.agent.getVehicule();
 	}

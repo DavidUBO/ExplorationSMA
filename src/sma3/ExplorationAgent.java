@@ -10,8 +10,9 @@ import exploration.Vehicule;
 import jade.core.AID;
 import jade.core.Agent;
 import sma.common.Coordonnees;
-import sma3.boss.ElectionBigBossBehaviour;
 import sma3.carte.CarteDynamique;
+import sma3.comportement.election.DecouverteAgentsBehaviour;
+import sma3.comportement.election.ElectionBigBossBehaviour;
 
 public class ExplorationAgent extends Agent {
 	

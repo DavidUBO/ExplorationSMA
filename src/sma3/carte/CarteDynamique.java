@@ -334,9 +334,10 @@ public class CarteDynamique {
 		int compteur = 0;
 		file.add(new Pair<>(arrivee, compteur++));
 		
+		int minIndice = 0;
 		while (true) {
 			final Integer compteurInteger = new Integer(compteur); // thanks : https://stackoverflow.com/a/33799995
-			for (int i = 0; i < file.size(); i++) {
+			for (int i = minIndice; i < file.size(); i++) {
 				Pair<Coordonnees, Integer> paire = file.get(i);
 				List<Coordonnees> casesAdjacentes = getCoordonneesAdjacentes(paire.getKey());
 				for (Iterator<Coordonnees> it = casesAdjacentes.iterator(); it.hasNext(); ) {
@@ -354,6 +355,7 @@ public class CarteDynamique {
 						file.add(new Pair<>(c, compteur));
 					}
 				}
+				minIndice++;
 			}
 			compteur++;
 		}
